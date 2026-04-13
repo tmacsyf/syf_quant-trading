@@ -1,0 +1,126 @@
+# 量化交易系统配置
+
+# 系统基础配置
+system:
+  name: "QuantTrading System"
+  version: "0.1.0"
+  timezone: "Asia/Shanghai"
+  log_level: "INFO"
+  data_dir: "./data_storage"
+
+# 数据配置
+data:
+  # A股数据源
+  a_share:
+    provider: "akshare"
+    cache_dir: "./data_storage/a_share"
+    retry_times: 3
+    retry_delay: 1
+  
+  # 港股数据源
+  hk_share:
+    provider: "akshare"
+    cache_dir: "./data_storage/hk_share"
+    retry_times: 3
+    retry_delay: 1
+  
+  # 美股数据源
+  us_share:
+    provider: "yfinance"
+    cache_dir: "./data_storage/us_share"
+    retry_times: 3
+    retry_delay: 1
+  
+  # 缓存配置
+  cache:
+    enabled: true
+    ttl: 3600  # 缓存时间（秒）
+    max_size: 1000  # 最大缓存条目数
+
+# 回测配置
+backtest:
+  initial_capital: 100000  # 初始资金
+  commission: 0.0003  # 手续费率 (万3)
+  slippage: 0.001  # 滑点
+  margin_ratio: 1.0  # 保证金比例
+  
+# 风控配置
+risk:
+  # 仓位管理
+  position:
+    max_single_position: 0.3  # 单票最大仓位
+    max_industry_position: 0.5  # 单行业最大仓位
+    min_cash_ratio: 0.1  # 最小现金比例
+  
+  # 止损止盈
+  stop_loss:
+    enabled: true
+    method: "fixed"  # fixed / atr / trailing
+    fixed_ratio: 0.05  # 固定5%止损
+  
+  stop_profit:
+    enabled: true
+    method: "fixed"
+    fixed_ratio: 0.10  # 固定10%止盈
+  
+  # 黑名单
+  blacklist:
+    - "ST"  # ST股票
+    - "*ST"  # *ST股票
+    - "退市"  # 退市股票
+  
+  # 波动率控制
+  volatility:
+    enabled: true
+    max_daily_volatility: 0.05  # 单日最大波动5%
+
+# 策略配置
+strategy:
+  # 双均线策略
+  moving_average:
+    enabled: true
+    fast_period: 5
+    slow_period: 20
+    
+  # 均值回归策略
+  mean_reversion:
+    enabled: true
+    rsi_period: 14
+    oversold: 30
+    overbought: 70
+    
+  # 多因子策略
+  multi_factor:
+    enabled: false
+    factors:
+      - "momentum"
+      - "value"
+      - "quality"
+
+# 交易执行配置
+execution:
+  mode: "paper"  # paper / live
+  
+  # 模拟交易配置
+  paper:
+    delay: 0  # 模拟延迟（秒）
+    fill_rate: 1.0  # 成交率
+  
+  # 实盘配置（待填充）
+  live:
+    broker: ""
+    api_key: ""
+    api_secret: ""
+
+# 监控配置
+monitor:
+  enabled: true
+  notify_on:
+    - "trade"
+    - "error"
+    - "daily_report"
+  
+  # 通知方式
+  notification:
+    webhook: ""
+    email: ""
