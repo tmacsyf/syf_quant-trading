@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from data import DataFetcher, DataCache, DataPreprocessor
 from data import RealtimeFetcher, get_realtime_quote, get_realtime_quotes
 from backtest import BacktestEngine
-from strategy import MovingAverageCrossStrategy, MeanReversionStrategy
+from strategy import MovingAverageCrossStrategy, MeanReversionStrategy, TangjieTradeStrategy
 
 
 def parse_args():
@@ -22,7 +22,7 @@ def parse_args():
                        help='实时行情模式')
 
     parser.add_argument('--strategy', '-s', type=str, default='ma',
-                       choices=['ma', 'mean_reversion'],
+                       choices=['ma', 'mean_reversion', 'tangjie'],
                        help='策略类型')
 
     parser.add_argument('--symbol', type=str, default='000001',
@@ -93,8 +93,10 @@ def run_backtest(args):
     print(f"\n创建策略: {args.strategy}")
     if args.strategy == 'ma':
         strategy = MovingAverageCrossStrategy(fast_period=5, slow_period=20)
-    else:
+    elif args.strategy == 'mean_reversion':
         strategy = MeanReversionStrategy(rsi_period=14, oversold=30, overbought=70)
+    else:  # tangjie
+        strategy = TangjieTradeStrategy()
     
     print("\n运行回测...")
     engine = BacktestEngine(initial_capital=args.capital)
