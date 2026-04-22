@@ -124,3 +124,28 @@ monitor:
   notification:
     webhook: ""
     email: ""
+
+  # 飞书告警
+  feishu:
+    webhook_url: ""  # 飞书自定义机器人Webhook地址
+    enabled: false   # 设为true并填入webhook_url后启用
+
+# 盯盘配置
+watchlist:
+  # 监控股票列表（代码: 备注/关键价位）
+  stocks:
+    - code: "688268"
+      name: "华特气体"
+      cost_price: 0        # 持仓成本，0表示不监控
+      stop_loss: 0         # 止损价，0表示不监控
+      stop_profit: 0       # 止盈价，0表示不监控
+    - code: "688661"
+      name: "和林微纳"
+      cost_price: 0
+      stop_loss: 0
+      stop_profit: 0
+  # 告警阈值
+  alert:
+    volume_ratio_threshold: 3.0   # 量比超过此值告警
+    rise_pct_threshold: 7.0       # 涨幅超过此值告警
+    drop_pct_threshold: -5.0      # 跌幅超过此值告警
